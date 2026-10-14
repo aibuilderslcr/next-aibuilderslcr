@@ -1,26 +1,369 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Terminal / ANSI design tokens. Accent is derived from the mark in
+  public/favicon.svg (#863bff) — lightened to #a97dff so it clears AA
+  contrast on the near-black ground when used for text.
+*/
+@theme {
+  --color-ground: #08070c;
+  --color-panel: #0e0c15;
+  --color-line: #1e1a2b;
+  --color-line-strong: #2e2842;
+  --color-dim: #8b85a3;
+  --color-ink: #c5c0d6;
+  --color-bright: #efecf7;
+  --color-accent: #a97dff;
+  --color-accent-deep: #863bff;
+
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "DejaVu Sans Mono", monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* min-height here is what #root carried under Vite; App Router has no #root. */
+  body {
+    min-height: 100vh;
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Sticky bar clearance for in-page anchors. */
+  :target,
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
+    color: var(--color-bright);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .poster-stage {
+    display: grid;
+    min-height: 100vh;
+    place-items: start center;
+    padding: 2rem;
+    background:
+      radial-gradient(ellipse at 50% 18%, rgb(47 15 76 / 0.32), transparent 34rem),
+      linear-gradient(135deg, #08070c 0%, #0d0712 48%, #050409 100%);
+  }
+
+  .poster {
+    position: relative;
+    display: flex;
+    width: 800px;
+    min-height: 2100px;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    padding: 142px 76px 76px;
+    background:
+      radial-gradient(ellipse at 50% 22%, rgb(107 35 173 / 0.13), transparent 31rem),
+      linear-gradient(180deg, #09070d 0%, #050409 100%);
+    box-shadow: 0 2rem 6rem rgb(0 0 0 / 0.45);
+    text-align: center;
+  }
+
+  .poster::before {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.018) 0 1px,
+      transparent 1px 4px
+    );
+    content: "";
+    pointer-events: none;
+  }
+
+  .poster-copy {
+    margin-top: 122px;
+    color: var(--color-bright);
+    font-size: 29px;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+
+  .poster-rule {
+    width: 485px;
+    max-width: 100%;
+    height: 10px;
+    margin-top: 66px;
+    background-image: radial-gradient(circle, var(--color-accent) 0 4px, transparent 5px);
+    background-size: 34px 10px;
+    background-position: center;
+  }
+
+  .poster-invite {
+    margin-top: 70px;
+    color: var(--color-ink);
+    font-size: 22px;
+    line-height: 1.7;
+  }
+
+  .poster-footer {
+    display: flex;
+    gap: 18px;
+    margin-top: auto;
+    color: var(--color-accent);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* --- shared terminal chrome ------------------------------------------ */
+
+  /*
+    Tracking and size both shrink on narrow viewports: at a fixed .22em the
+    longer strings ("LOCAL / COLLABORATIVE / RESPONSIBLE") overflow a phone.
+  */
+  .term-meta {
+    font-size: clamp(0.625rem, 2.3vw, 0.6875rem);
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: clamp(0.1em, 0.75vw, 0.2em);
+    color: var(--color-dim);
+  }
+
+  .term-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .term-label > :first-child {
+    color: var(--color-accent);
+  }
+
+  .term-label::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      var(--color-line-strong),
+      transparent
+    );
+  }
+
+  /* Wraps instead of overflowing once the two halves stop fitting. */
+  .term-split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.25rem;
+  }
+
+  .brand-triangle {
+    width: 0;
+    height: 0;
+    border-block: 5px solid transparent;
+    border-inline-start: 8px solid var(--color-accent);
+  }
+
+  .status-dot {
+    animation: status-pulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes status-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0
+        color-mix(in oklab, var(--color-accent) 55%, transparent);
+    }
+    60% {
+      opacity: 0.55;
+      box-shadow: 0 0 0 4px transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot {
+      animation: none;
+    }
+  }
+
+  /* --- ANSI lockup ----------------------------------------------------- */
+
+  .ansi-icon-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .ansi-icon {
+    display: block;
+    width: 235px;
+    height: auto;
+    filter:
+      drop-shadow(0 0 2px rgba(169, 125, 255, 0.85))
+      drop-shadow(0 0 18px rgba(169, 125, 255, 0.45));
+  }
+
+  .ansi-divider {
+    width: min(28rem, 62%);
+    height: 1.25rem;
+    margin: 0.75rem auto 0;
+    background-image: radial-gradient(
+      circle,
+      rgba(169, 125, 255, 0.95) 0,
+      rgba(169, 125, 255, 0.95) 1.2px,
+      transparent 1.5px
+    );
+    background-size: 0.9rem 0.9rem;
+    background-repeat: repeat-x;
+    background-position: center;
+    opacity: 0.9;
+  }
+
+  .ansi-lockup {
+    text-align: center;
+  }
+
+  .ansi-art {
+    position: relative;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    white-space: pre;
+    font-family: var(--font-mono);
+    line-height: 1.03;
+    color: var(--color-bright);
+    text-shadow:
+      0 0 1px color-mix(in oklab, var(--color-accent) 40%, transparent),
+      0 0 24px color-mix(in oklab, var(--color-accent-deep) 30%, transparent);
+  }
+
+  /* Faint offset echo, for depth. Kept low-contrast so the art stays crisp. */
+  .ansi-art::before {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: var(--color-accent);
+    opacity: 0.3;
+    transform: translate(1px, -1px);
+    text-shadow: none;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+
+  /*
+    The art is a fixed character grid, so it can only stay unbroken if the
+    font size tracks the container width. Sizes below are
+    (fill fraction) / (columns x monospace advance ratio ~0.61):
+      wordmark  75 cols, fills the container
+      LCR       24 cols, fills ~55% so the two lines stack as one lockup
+    The vw values are the pre-container-query fallback.
+  */
+  .ansi-art-wide {
+    font-size: 16.8px;
+  }
+
+  .ansi-art-lcr {
+    margin-top: 0.5rem;
+    font-size: 29px;
+  }
+
+  @media (max-width: 840px) {
+    .poster-stage {
+      padding: 0;
+    }
+
+    .poster {
+      width: 100vw;
+      min-height: min(262.5vw, 2100px);
+      padding: 17.75vw 9.5vw 9.5vw;
+    }
+
+    .poster-copy {
+      margin-top: 15.25vw;
+      font-size: clamp(16px, 3.625vw, 29px);
+    }
+
+    .poster-rule {
+      margin-top: 8.25vw;
+    }
+
+    .poster-invite {
+      margin-top: 8.75vw;
+      font-size: clamp(13px, 2.75vw, 22px);
+    }
+
+    .poster-footer {
+      gap: 2.25vw;
+      font-size: clamp(9px, 2.125vw, 17px);
+    }
+
+    .ansi-icon {
+      width: 29.4vw;
+    }
+
+    .ansi-art-wide {
+      font-size: 2.1vw;
+    }
+
+    .ansi-art-lcr {
+      font-size: 3.625vw;
+    }
+  }
+
+  @supports (font-size: 1cqi) {
+    .ansi-lockup {
+      container-type: inline-size;
+    }
+
+    .ansi-art-wide {
+      font-size: calc(100cqi * 0.0218);
+    }
+
+    .ansi-art-lcr {
+      margin-top: 1.5cqi;
+      font-size: calc(100cqi * 0.0382);
+    }
+  }
+
+  /* --- CRT atmosphere --------------------------------------------------- */
+
+  .crt-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    background-image:
+      radial-gradient(
+        90rem 40rem at 50% -10%,
+        color-mix(in oklab, var(--color-accent-deep) 14%, transparent),
+        transparent 70%
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgb(255 255 255 / 0.016) 0 1px,
+        transparent 1px 3px
+      );
+  }
 }
