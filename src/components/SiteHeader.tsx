@@ -4,7 +4,7 @@ import Link from "next/link";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-ground/85 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
         <Link
           href="/"
           className="group flex items-center gap-2 text-sm tracking-tight text-bright"

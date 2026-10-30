@@ -1,12 +1,14 @@
+import { SectionLabel } from "@/components/SectionLabel";
+
 export function EventsCalendar() {
   return (
-    <section id="events" className="mx-auto max-w-3xl px-6 pb-20">
-      <div className="term-meta term-label" aria-hidden="true">
-        <span>02</span>
-        <span>Events_feed</span>
-      </div>
+    <section id="events" aria-labelledby="events-heading">
+      <SectionLabel index="03" label="Events_feed" />
 
-      <h2 className="mt-8 text-lg tracking-tight text-bright sm:text-xl">
+      <h2
+        id="events-heading"
+        className="mt-8 text-lg tracking-tight text-bright sm:text-xl"
+      >
         Upcoming events
       </h2>
       <p className="mt-2 text-sm text-dim">
@@ -19,15 +21,16 @@ export function EventsCalendar() {
         Fully custom event cards would need the Luma API (Plus subscription,
         plus something server-side to keep the key off the client).
 
-        Width is fluid rather than Luma's fixed 600px: the column runs to
-        768px, so a fixed width leaves a gap on desktop and overflows a phone.
+        Width is fluid rather than Luma's fixed 600px so it fills its column
+        without overflowing a phone; it gets taller on desktop, where there
+        is room to show more than one event at a time.
       */}
       <iframe
         src="https://luma.com/embed/calendar/cal-kIxpqTyBAdcMmh1/events?lt=dark"
         title="AI Builders LCR events calendar"
         width="600"
         height="450"
-        className="mt-8 w-full border border-line-strong bg-panel"
+        className="mt-8 h-[450px] w-full border border-line-strong bg-panel lg:h-[640px]"
         allowFullScreen
         aria-hidden="false"
         tabIndex={0}
