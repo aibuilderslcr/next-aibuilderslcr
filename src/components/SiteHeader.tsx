@@ -1,14 +1,12 @@
-/*
-  Sticky terminal site bar. Not rendered on `/` — the poster is the whole
-  home page — so it lives here for the design-system showcase and for any
-  future multi-section layout.
-*/
+import Link from "next/link";
+
+/* Sticky terminal site bar, shared by every page. */
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-ground/85 backdrop-blur-sm">
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-4">
-        <a
-          href="#top"
+        <Link
+          href="/"
           className="group flex items-center gap-2 text-sm tracking-tight text-bright"
         >
           <span
@@ -19,13 +17,16 @@ export function SiteHeader() {
             /
           </span>
           <span className="font-medium">AI Builders LCR</span>
-        </a>
+        </Link>
 
         <div className="flex items-center gap-5">
           <nav className="term-meta flex gap-5">
-            <a href="#events" className="transition-colors hover:text-bright">
+            <Link href="/#events" className="transition-colors hover:text-bright">
               Events
-            </a>
+            </Link>
+            <Link href="/members" className="transition-colors hover:text-bright">
+              Members
+            </Link>
             <a
               href="https://github.com/aibuilderslcr"
               target="_blank"

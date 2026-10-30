@@ -18,8 +18,8 @@ bun dev
 
 ## Pages
 
-- `/` — the poster home page (identical to the original Vite site).
-- `/design-system` — living documentation of the terminal/ANSI theme: color tokens, typography, chrome primitives, and live component showcases.
+- `/` — home: ANSI brand lockup, intro, members teaser and the Luma events calendar.
+- `/members` — member directory plus instructions for adding a profile via pull request. Profiles live in `src/data/members.ts`.
 
 ## Structure
 
@@ -27,16 +27,17 @@ bun dev
 src/
   app/
     layout.tsx             ← metadata, viewport, html/body shell
-    page.tsx               ← home: poster stage + CRT overlay + PosterHero
+    page.tsx               ← home: header, lockup hero, members teaser, events, footer
     globals.css            ← Tailwind import, @theme tokens, terminal chrome
-    design-system/page.tsx ← theme + component documentation
+    members/page.tsx       ← member directory + "add your profile" instructions
+  data/
+    members.ts         ← member profiles (edited by PRs)
   components/
     BrandLockup.tsx    ← ANSI wordmark lockup + liver-bird icon (the h1)
-    PosterHero.tsx     ← the 800×2100 poster section (lockup + strapline copy)
     CrtOverlay.tsx     ← fixed scanline/glow atmosphere layer
-    SiteHeader.tsx     ← sticky terminal site bar (not on the poster home page)
-    SiteFooter.tsx     ← terminal meta footer strip (not on the poster home page)
-    EventsCalendar.tsx ← Luma embed section (not on the poster home page)
+    SiteHeader.tsx     ← sticky terminal site bar
+    SiteFooter.tsx     ← terminal meta footer strip
+    EventsCalendar.tsx ← Luma embed section
 ```
 
 The ANSI art is a fixed character grid: each block is padded to a uniform

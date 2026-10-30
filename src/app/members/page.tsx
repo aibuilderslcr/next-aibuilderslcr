@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { CrtOverlay } from "@/components/CrtOverlay";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 import { MEMBERS } from "@/data/members";
 
 export const metadata: Metadata = {
@@ -36,8 +36,9 @@ export default function MembersPage() {
   return (
     <div className="min-h-screen bg-ground">
       <CrtOverlay />
+      <SiteHeader />
 
-      <main className="relative mx-auto max-w-3xl px-6 py-20">
+      <main className="relative mx-auto max-w-3xl px-6 pt-16 pb-20 sm:pt-20">
         {/* 1. Intro */}
         <section aria-labelledby="members-heading">
           <SectionHeader index="00" label="Members" />
@@ -52,14 +53,6 @@ export default function MembersPage() {
             The people building with AI across the Liverpool City Region.
             Profiles live in the site&apos;s GitHub repo — add yours with a
             pull request.
-          </p>
-          <p className="mt-4">
-            <Link
-              href="/"
-              className="term-meta text-accent transition-colors hover:text-bright"
-            >
-              ← Back to site
-            </Link>
           </p>
         </section>
 

@@ -29,7 +29,7 @@ const LCR = `
 
 /*
   The identity block: section label, the ANSI lockup, and the strapline rule.
-  Rendered inside <PosterHero>, which supplies the section element and the copy.
+  Rendered at the top of the home page, which supplies the section and the copy.
 */
 export function BrandLockup() {
   return (
