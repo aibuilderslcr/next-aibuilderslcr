@@ -19,7 +19,9 @@ bun dev
 ## Pages
 
 - `/` — home: ANSI brand lockup, intro, members teaser and the Luma events calendar.
+- `/demos` — community demos with project links, use cases and demo dates. Add an entry in `src/data/demos.ts`.
 - `/members` — member directory plus instructions for adding a profile via pull request. Profiles live in `src/data/members.ts`.
+- `/sitemap.xml` — the three public page URLs.
 
 ## Structure
 
@@ -29,8 +31,11 @@ src/
     layout.tsx             ← metadata, viewport, html/body shell
     page.tsx               ← home: header, lockup hero, members teaser, events, footer
     globals.css            ← Tailwind import, @theme tokens, terminal chrome
+    demos/page.tsx         ← community demos
     members/page.tsx       ← member directory + "add your profile" instructions
+    sitemap.ts            ← public page URLs
   data/
+    demos.ts           ← community demos (edited by PRs)
     members.ts         ← member profiles (edited by PRs)
   components/
     BrandLockup.tsx    ← ANSI wordmark lockup + liver-bird icon (the h1)
